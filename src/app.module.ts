@@ -16,17 +16,14 @@ import { User } from './user/user.entity';
   ),
   TypeOrmModule.forRoot({
     type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'root',
-    password: 'root',
-    database: 'boilerplate_test',
-    entities: [
-        User
-    ],
+    host: process.env.DB_HOST,
+    port: +process.env.DB_PORT,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    entities: [User],
     synchronize: true,
-    logging: ['query', 'error', 'schema'], 
-  })
+  }),
 ],
   controllers: [AppController],
   providers: [AppService],

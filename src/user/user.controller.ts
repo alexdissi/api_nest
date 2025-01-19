@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { RequestWithUser } from 'src/auth/jwt.strategy';
-import { AdminGuard } from 'src/auth/guard/admin.guard';
+import { SearchUsersDto } from './dto/search-user.dto';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'))
@@ -24,11 +24,14 @@ export class UserController {
       const userId = req.user.userId;      
       return this.userService.getUser(userId);
     }
-
-    @UseGuards(AdminGuard)
+  
     @Get('/search-users')
-    async getResearch(@Query() paginationDto: PaginationDto, @Query('name') name: string) {
-        return this.userService.researchUsers(paginationDto, name);
+    async getResearch(
+      @Query() paginationDto: PaginationDto, 
+      @Query() searchDto: SearchUsersDto
+    ) {
+      const { name } = searchDto;
+      return this.userService.researchUsers(paginationDto, name);
     }
     
 }

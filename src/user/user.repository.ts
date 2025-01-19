@@ -14,7 +14,7 @@ export class UserRepository {
     return this.userRepository.find({
       skip: (page - 1) * limit,
       take: limit,
-      select: ['id', 'name', 'email', 'role', 'createdAt'],
+      select: ['id', 'firstName', "lastName", 'email', 'role', 'createdAt'],
     });
   }
 
@@ -23,7 +23,8 @@ export class UserRepository {
       where: { id: userId },
       select: [
         'id',
-        'name',
+        'firstName',
+        'lastName',
         'email',
         'profilePictureUrl',
         'role',
@@ -41,10 +42,10 @@ export class UserRepository {
 
   async findUsersByName(name: string, page: number, limit: number) {
     return this.userRepository.find({
-      where: { name: ILike(`%${name}%`) },
+      where: { firstName: ILike(`%${name}%`) },
       skip: (page - 1) * limit,
       take: limit,
-      select: ['id', 'name', 'email'],
+      select: ['id', 'firstName', "lastName", 'email'],
     });
   }
 
@@ -59,7 +60,8 @@ export class UserRepository {
   async createUser(data: {
     email: string;
     password: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     profilePictureUrl: string;
   }) {
     const user = this.userRepository.create({

@@ -74,5 +74,4 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
   const userId = request.user.userId;
   return await this.authService.verify2FA(userId, body.token);
 }
-
   }

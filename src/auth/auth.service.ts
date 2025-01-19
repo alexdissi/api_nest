@@ -40,8 +40,7 @@ export class AuthService {
 
   async register({ registerBody }: { registerBody: CreateUserDto }) {
     const { email, firstName, lastName, password, passwordConfirm } = registerBody;
-    const name = `${firstName} ${lastName}`;
-    const profilePictureUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${firstName}${lastName}`;
+    const profilePictureUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${firstName[0]}${lastName[0]}`;
   
     if (password !== passwordConfirm) {
       throw new HttpException('Passwords do not match.', HttpStatus.BAD_REQUEST);
@@ -58,12 +57,13 @@ export class AuthService {
     const createdUser = await this.userRepository.createUser({
       email,
       password: hashedPassword,
-      name,
+      firstName,
+      lastName,
       profilePictureUrl,
     });
   
     await this.mailerService.sendCreatedAccountEmail({
-      firstName: name,
+      firstName: firstName,
       recipient: email,
     });
   
@@ -102,7 +102,7 @@ export class AuthService {
     await this.userRepository.updateUserResetStatus(user.id, true, resetToken);
 
     await this.mailerService.sendRequestedPasswordEmail({
-      firstName: user.name,
+      firstName: user.firstName,
       recipient: user.email,
       token: resetToken,
     });
